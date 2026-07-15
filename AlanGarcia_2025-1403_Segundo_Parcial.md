@@ -87,12 +87,8 @@ El detalle del direccionamiento lógico para cada dispositivo se estructura de l
 | **Windows Server** | Ethernet0 | `14.3.20.2` | `255.255.255.0` | `14.3.20.1` |
 | **Windows Client** | Ethernet0 | `14.3.10.11` (DHCP) | `255.255.255.0` | `14.3.10.1` |
 
-<br>
-<div style="text-align: center;">
-    <img src="images/02_topologia_gns3.png" width="480" alt="Topologia de Red GNS3">
-    <p><em>Figura 1: Topología lógica del escenario implementada en GNS3.</em></p>
-
-</div>
+<img src="images/02_topologia_pnetlab.png" width="480" alt="Topologia de Red PNETLab">
+<p><em>Figura 1: Topología lógica del escenario implementada en PNETLab.</em></p>
 
 </div>
 
@@ -118,30 +114,21 @@ Dentro de estos grupos se crean y asocian las cuentas de usuario respectivas (`U
 ### 3.2 Internet Information Services (IIS)
 Se despliega el servidor web IIS en Windows Server. La intranet corporativa de V&L Consultores Legales se aloja en el directorio predeterminado `C:\inetpub\wwwroot\index.html` utilizando el portal HTML premium diseñado. El archivo correspondiente está almacenado en el repositorio bajo: [index.html](resources/index.html).
 
-<br>
-<div style="text-align: center;">
-    <img src="images/01_intranet_iis.png" width="480" alt="Intranet IIS">
-    <p><em>Figura 3: Portal web intranet de IIS "Segundo Parcial Alan" cargado en el Windows Client.</em></p>
-</div>
+<img src="images/01_intranet_iis.png" width="480" alt="Intranet IIS">
+<p><em>Figura 3: Portal web intranet de IIS "Segundo Parcial Alan" cargado en el Windows Client.</em></p>
 
 ### 3.3 Network Policy Server (NPS) y AAA RADIUS
 El servicio NPS gestiona las solicitudes de acceso SSH provenientes de los routers. El flujo de configuración requiere:
 
 1. **Clientes RADIUS:** Se registran los routers `R-Oeste` (identificado en la red interna con su IP origen de túnel `10.0.0.1`) y `R-Este` (`14.3.20.1`) como clientes RADIUS de confianza. Se establece la clave secreta compartida: `20251403`.
-    <br>
-    <div style="text-align: center;">
-        <img src="images/08_nps_radius_clients.png" width="480" alt="RADIUS Clients en NPS">
-        <p><em>Figura 4: Clientes RADIUS registrados en el NPS para R-Oeste (10.0.0.1) y R-Este (14.3.20.1).</em></p>
-    </div>
+    <img src="images/08_nps_radius_clients.png" width="480" alt="RADIUS Clients en NPS">
+<p><em>Figura 4: Clientes RADIUS registrados en el NPS para R-Oeste (10.0.0.1) y R-Este (14.3.20.1).</em></p>
 2. **Políticas de Red (Network Policies):** Se configuran tres políticas de acceso independientes con el siguiente orden de evaluación y condiciones:
    * **Cisco SSH Level 1 (Prioridad 1):** Evalúa la membresía en el grupo `ALAN\NPS1`. En los atributos de respuesta del RADIUS (pestaña Settings -> Vendor Specific Attributes) se inyecta el Vendor Code `9` (Cisco) con el VSA **`shell:priv-lvl=1`**.
    * **Cisco SSH Level 10 (Prioridad 2):** Evalúa la membresía en el grupo `ALAN\NPS10`. Inyecta el atributo Cisco-AV-Pair **`shell:priv-lvl=10`**.
    * **Cisco SSH Level 15 (Prioridad 3):** Evalúa la membresía en el grupo `ALAN\NPS15`. Inyecta el atributo Cisco-AV-Pair **`shell:priv-lvl=15`**.
-    <br>
-    <div style="text-align: center;">
-        <img src="images/07_nps_network_policies.png" width="480" alt="Network Policies en NPS">
-        <p><em>Figura 5: Directivas de red (Network Policies) estructuradas en el NPS según el nivel de privilegio.</em></p>
-    </div>
+    <img src="images/07_nps_network_policies.png" width="480" alt="Network Policies en NPS">
+<p><em>Figura 5: Directivas de red (Network Policies) estructuradas en el NPS según el nivel de privilegio.</em></p>
 
 </div>
 
@@ -188,12 +175,8 @@ interface Tunnel0
  tunnel protection ipsec profile PROFILE_GRE
 ```
 
-<br>
-<div style="text-align: center;">
-    <img src="images/05_crypto_session_active.png" width="480" alt="Crypto Session Active">
-    <p><em>Figura 6: Verificación del estado activo (ACTIVE) del túnel VPN IKEv1 (ISAKMP) en R-Oeste.</em></p>
-
-</div>
+<img src="images/05_crypto_session_active.png" width="480" alt="Crypto Session Active">
+<p><em>Figura 6: Verificación del estado activo (ACTIVE) del túnel VPN IKEv1 (ISAKMP) en R-Oeste.</em></p>
 
 </div>
 
@@ -213,11 +196,8 @@ Para documentar el correcto funcionamiento de los entregables y asegurar una cal
 5.  **Verificación de Funcionamiento de la ACL:** Realizar una prueba de conectividad desde el cliente usando ping (`ping 14.3.20.2`) y verificar que responde correctamente. Posteriormente, intentar establecer una conexión remota RDP (`mstsc`) o transferencia de archivos hacia el servidor para evidenciar que el tráfico es bloqueado por la ACL en el router.
 6.  **Autenticación en Equipos con 3 Usuarios de AD:** Iniciar sesión por SSH desde un cliente hacia los routers utilizando las credenciales de AD configuradas:
     *   Iniciar sesión con el usuario de nivel 15 (`USR15`) y ejecutar `show privilege` para demostrar que se entra directamente en modo de configuración de nivel 15.
-        <br>
-        <div style="text-align: center;">
-            <img src="images/04_ssh_radius_autenticacion.png" width="450" alt="Autenticacion SSH RADIUS">
-            <p><em>Figura 8: Prueba de inicio de sesión SSH con USR15 y validación de privilegio de nivel 15.</em></p>
-        </div>
+        <img src="images/04_ssh_radius_autenticacion.png" width="450" alt="Autenticacion SSH RADIUS">
+<p><em>Figura 8: Prueba de inicio de sesión SSH con USR15 y validación de privilegio de nivel 15.</em></p>
     *   Iniciar sesión con el usuario de nivel 10 para comprobar que se asigna el nivel 10.
     *   Iniciar sesión con el usuario de nivel 1 para verificar que el nivel de acceso se restringe al mínimo.
 </div>
