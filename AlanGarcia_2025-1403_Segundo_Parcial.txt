@@ -1,0 +1,43 @@
+================================================================================
+                    INSTITUTO TECNOLÓGICO DE LAS AMÉRICAS (ITLA)
+================================================================================
+
+TEMA:
+Implementación de Infraestructura de Red Segura con VPN Site-to-Site 
+(IKEv1 + GRE) y Autenticación Centralizada RADIUS
+
+ESTUDIANTE:
+Alan Daniel Garcia Mendez
+
+MATRÍCULA:
+2025-1403
+
+CARRERA:
+Seguridad Informática
+
+ASIGNATURA:
+Seguridad de Redes (TSI-203)
+
+DOCENTE:
+Jonathan Esteban Rondon Corniel
+
+FECHA DE ENTREGA:
+15 de julio de 2026
+
+--------------------------------------------------------------------------------
+ENLACES DE ENTREGA:
+--------------------------------------------------------------------------------
+
+1. ENLACE AL VIDEO DE EXPOSICIÓN (YOUTUBE):
+   https://youtu.be/tIp-_Fub9n0
+
+2. ENLACE AL REPOSITORIO DE CÓDIGO Y DOCUMENTACIÓN (GITHUB):
+   https://github.com/imAlanG16/segundo-parcial-seguridad-de-redes
+
+--------------------------------------------------------------------------------
+NOTA: 
+En la raíz del repositorio de GitHub se encuentra el archivo README.md, el cual 
+renderiza automáticamente de manera interactiva la documentación técnica formal, 
+los diagramas lógicos, las 8 evidencias en capturas de pantalla del laboratorio 
+realizado en PNETLab/Active Directory y las configuraciones de los routers Cisco.
+================================================================================
