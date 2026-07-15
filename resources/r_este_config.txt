@@ -1,0 +1,148 @@
+! =====================================================================
+! CONFIGURACIÓN CISCO IOS - ROUTER ESTE (R-Este)
+! Segundo Parcial - Seguridad de Redes (TSI-203)
+! Estudiante: Alan Daniel Garcia Mendez (2025-1403)
+! =====================================================================
+
+hostname R-Este
+
+! 1. Seguridad Básica de Red y MOTD
+enable secret Alan20251403
+no ip domain-lookup
+
+banner motd #Solo Personal Autorizado Alan 20251403#
+
+! Apagar interfaces no utilizadas para mitigar vectores de ataque (Ethernet0/2 y 0/3)
+interface Ethernet0/2
+ shutdown
+exit
+interface Ethernet0/3
+ shutdown
+exit
+
+! 2. Direccionamiento IP de Interfaces Físicas
+interface Ethernet0/0
+ description WAN_HACIA_ISP
+ ip address 2.2.2.2 255.255.255.252
+ ip nat outside
+ no ip redirects
+ no ip proxy-arp
+ no ip directed-broadcast
+ no shutdown
+exit
+
+interface Ethernet0/1
+ description LAN_ESTE_SERVIDORES
+ ip address 14.3.20.1 255.255.255.0
+ ip nat inside
+ no ip redirects
+ no ip proxy-arp
+ no ip directed-broadcast
+ no shutdown
+exit
+
+! 3. Servidor DHCP local para la LAN Este (Excluye el rango de infraestructura estática)
+ip dhcp excluded-address 14.3.20.1 14.3.20.20
+!
+ip dhcp pool LAN_ESTE
+ network 14.3.20.0 255.255.255.0
+ default-router 14.3.20.1
+ dns-server 14.3.20.2
+ domain-name alan.local
+exit
+
+! 4. Enrutamiento: Ruta por Defecto hacia el ISP
+ip route 0.0.0.0 0.0.0.0 2.2.2.1
+
+! 5. NAT Overload (PAT) con Exclusión de Tráfico VPN
+ip access-list extended NAT_ACL
+ deny ip 14.3.20.0 0.0.0.255 14.3.10.0 0.0.0.255
+ permit ip 14.3.20.0 0.0.0.255 any
+exit
+
+ip nat inside source list NAT_ACL interface Ethernet0/0 overload
+
+! 6. VPN Site-to-Site IKEv1 + GRE
+! Fase 1: Configuración de ISAKMP (IKEv1)
+crypto isakmp policy 10
+ encryption aes 256
+ hash sha256
+ authentication pre-share
+ group 14
+ lifetime 86400
+exit
+
+! Clave compartida (PSK) de la VPN basada en la matrícula (20251403)
+crypto isakmp key 20251403 address 1.1.1.2
+
+! Fase 2: Parámetros IPSec (Transform Set en modo transporte)
+crypto ipsec transform-set TS_GRE_IKEV1 esp-aes 256 esp-sha256-hmac
+ mode transport
+exit
+
+! Perfil IPSec para el túnel
+crypto ipsec profile PROFILE_GRE
+ set transform-set TS_GRE_IKEV1
+exit
+
+! 7. Lista de Control de Acceso (ACL) para Restricción del Servidor
+! Permite únicamente tráfico HTTP (puerto TCP 80) e ICMP (Ping) desde la LAN Oeste al Windows Server (14.3.20.2).
+! Bloquea el resto del tráfico proveniente de la LAN Oeste.
+ip access-list extended ACL_SERVER_LIMIT
+ permit tcp 14.3.10.0 0.0.0.255 host 14.3.20.2 eq 80
+ permit icmp 14.3.10.0 0.0.0.255 host 14.3.20.2
+ deny ip 14.3.10.0 0.0.0.255 host 14.3.20.2
+ permit ip any any
+exit
+
+! Interfaz del Túnel GRE
+interface Tunnel0
+ description TUNEL_GRE_VPN_S2S
+ ip address 10.0.0.2 255.255.255.252
+ tunnel source Ethernet0/0
+ tunnel destination 1.1.1.2
+ tunnel protection ipsec profile PROFILE_GRE
+ ! Aplicar ACL a la entrada del túnel para filtrar el tráfico entrante desde R-Oeste
+ ip access-group ACL_SERVER_LIMIT in
+exit
+
+! Ruta estática para enviar tráfico LAN a LAN a través del túnel VPN
+ip route 14.3.10.0 255.255.255.0 Tunnel0
+
+! 8. Autenticación Centralizada por RADIUS y AAA
+username admin privilege 15 secret Alan20251403
+
+! Inicializar AAA
+aaa new-model
+
+! Configurar servidor RADIUS (Windows Server NPS)
+radius server NPS_SERVER
+ address ipv4 14.3.20.2 auth-port 1812 acct-port 1813
+ key 20251403
+exit
+
+! Listas AAA para SSH
+aaa authentication login default group radius local
+aaa authorization exec default group radius local
+aaa accounting exec default start-stop group radius
+aaa accounting commands 15 default start-stop group radius
+
+! Configuración de SSH versión 2
+ip domain name alan.local
+crypto key generate rsa general-keys modulus 2048
+
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+
+! Aplicar AAA a las líneas de acceso VTY
+line con 0
+ password Alan20251403
+ login
+exit
+
+line vty 0 4
+ transport input ssh
+ login authentication default
+ authorization exec default
+exit

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segundo Parcial Alan</title>
+    <!-- Google Fonts: Outfit (Header) & Inter (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #090d16;
+            --bg-card: rgba(17, 25, 40, 0.75);
+            --border-glow: rgba(99, 102, 241, 0.12);
+            --border-card: rgba(255, 255, 255, 0.08);
+            --accent-blue: #3b82f6;
+            --accent-indigo: #6366f1;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --card-glow: rgba(99, 102, 241, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 45%);
+        }
+
+        /* Animated background lights */
+        .ambient-light-1 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            top: 10%;
+            left: 5%;
+            filter: blur(60px);
+            z-index: 1;
+            pointer-events: none;
+            animation: float-light 12s infinite alternate ease-in-out;
+        }
+
+        .ambient-light-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
+            bottom: 5%;
+            right: 5%;
+            filter: blur(80px);
+            z-index: 1;
+            pointer-events: none;
+            animation: float-light 16s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes float-light {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 30px) scale(1.1); }
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 1000px;
+            padding: 2.5rem 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .glass-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-card);
+            border-radius: 28px;
+            padding: 3.5rem;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4), 
+                0 0 60px var(--card-glow);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-indigo), var(--accent-cyan));
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .badge-secure {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 1.25rem;
+            background: rgba(99, 102, 241, 0.12);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50px;
+            color: #a5b4fc;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+            animation: pulse-glow 3s infinite;
+        }
+
+        .badge-secure svg {
+            width: 14px;
+            height: 14px;
+            fill: #a5b4fc;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Status panel */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 3rem;
+        }
+
+        .status-pill {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .status-pill:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .status-icon-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .pulse-dot.active {
+            color: var(--accent-emerald);
+            background-color: var(--accent-emerald);
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+
+        .pulse-dot.warning {
+            color: var(--accent-cyan);
+            background-color: var(--accent-cyan);
+            animation: pulse-ring-cyan 2s infinite ease-in-out;
+        }
+
+        .status-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .status-state {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 0.15rem;
+        }
+
+        /* Information cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 
+                        0 0 20px rgba(99, 102, 241, 0.08);
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-indigo);
+            margin-bottom: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--accent-indigo);
+            color: white;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+            transform: scale(1.05);
+        }
+
+        .feature-card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #ffffff;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Footer & Student ID Badge */
+        footer {
+            border-top: 1px solid var(--border-card);
+            padding-top: 2.25rem;
+            margin-top: 1rem;
+        }
+
+        .student-badge {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 1.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .student-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .student-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .student-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .student-details {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+
+        .detail-title {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+
+        .detail-val {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .matricula-hl {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.15); }
+            50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.35); }
+            100% { box-shadow: 0 0 10px rgba(99, 102, 241, 0.15); }
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes pulse-ring-cyan {
+            0% {
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 8px rgba(6, 182, 212, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .glass-container {
+                padding: 2rem;
+            }
+            .student-badge {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1.25rem 1.5rem;
+            }
+            .student-details {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-light-1"></div>
+    <div class="ambient-light-2"></div>
+
+    <div class="wrapper">
+        <div class="glass-container">
+            <header>
+                <div class="badge-secure">
+                    <svg viewBox="0 0 24 24" width="14" height="14">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="#a5b4fc"/>
+                    </svg>
+                    Filtro de Tr&aacute;fico Activo (ACL)
+                </div>
+                <h1>Segundo Parcial Alan</h1>
+                <p class="subtitle">Portal Corporativo Interno y Recursos de Seguridad &mdash; Red de Servidores</p>
+            </header>
+
+            <!-- Status panel -->
+            <div class="status-grid">
+                <div class="status-pill">
+                    <div class="status-icon-wrapper">
+                        <div class="pulse-dot active"></div>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-name">Servicio IIS</span>
+                        <span class="status-state">14.3.20.2</span>
+                    </div>
+                </div>
+
+                <div class="status-pill">
+                    <div class="status-icon-wrapper">
+                        <div class="pulse-dot active" style="color: var(--accent-indigo); background-color: var(--accent-indigo); box-shadow: 0 0 10px var(--accent-indigo);"></div>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-name">VPN S2S (GRE)</span>
+                        <span class="status-state">Tunnel0 Activo</span>
+                    </div>
+                </div>
+
+                <div class="status-pill">
+                    <div class="status-icon-wrapper">
+                        <div class="pulse-dot warning"></div>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-name">Radius NPS</span>
+                        <span class="status-state">Autenticando</span>
+                    </div>
+                </div>
+
+                <div class="status-pill">
+                    <div class="status-icon-wrapper">
+                        <div class="pulse-dot active" style="color: var(--accent-indigo); background-color: var(--accent-indigo); box-shadow: 0 0 10px var(--accent-indigo);"></div>
+                    </div>
+                    <div class="status-info">
+                        <span class="status-name">Acceso SSH</span>
+                        <span class="status-state">RADIUS AAA</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information cards describing the network security setup -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h3>VPN Site-to-Site (IKEv1 + GRE)</h3>
+                    <p>La conectividad entre la LAN Oeste (Clientes `14.3.10.0/24`) y la LAN Este (Servidores `14.3.20.0/24`) se realiza a trav&eacute;s de un t&uacute;nel l&oacute;gico GRE encapsulado en una pol&iacute;tica IPSec basada en IKEv1 (IPs de t&uacute;nel `10.0.0.1` y `10.0.0.2`). Esto garantiza cifrado AES-256 de extremo a extremo para los dispositivos finales.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h3>Autenticaci&oacute;n Centralizada RADIUS</h3>
+                    <p>Se integra Active Directory Domain Services (AD DS) con Network Policy Server (NPS, `14.3.20.2`) para actuar como servidor RADIUS. La administraci&oacute;n de R-Oeste y R-Este se autentica remotamente mapeando las pol&iacute;ticas de NPS de niveles 15, 10 y 1 a los grupos de AD.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Seguridad de Capa 2 (Mitigaci&oacute;n)</h3>
+                    <p>La electr&oacute;nica de red est&aacute; asegurada contra ataques cl&aacute;sicos. Se implement&oacute; Port-Security (limite 2 MACs sticky, shutdown ante violaciones), DHCP Snooping para mitigar servidores atacantes, Dynamic ARP Inspection (DAI) y BPDU Guard con PortFast.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <h3>Restricci&oacute;n de Acceso por ACL</h3>
+                    <p>Para proteger el Windows Server (`14.3.20.2`), se aplica una lista de acceso de rango extendido en la entrada del t&uacute;nel VPN de R-Este. La ACL permite &uacute;nicamente el tr&aacute;fico HTTP (puerto TCP 80) e ICMP (Ping) desde la LAN Oeste, bloqueando RDP, SSH o SMB.</p>
+                </div>
+            </div>
+
+            <!-- Footer & Student Metadata -->
+            <footer>
+                <div class="student-badge">
+                    <div class="student-meta">
+                        <span class="student-label">Estudiante</span>
+                        <span class="student-name">Alan Daniel Garcia Mendez</span>
+                    </div>
+                    <div class="student-details">
+                        <div class="detail-item">
+                            <span class="detail-title">Matr&iacute;cula</span>
+                            <span class="detail-val matricula-hl">2025-1403</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-title">Carrera</span>
+                            <span class="detail-val">Seguridad Inform&aacute;tica</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-title">Asignatura</span>
+                            <span class="detail-val">Seguridad de Redes</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-title">Docente</span>
+                            <span class="detail-val">Jonathan Esteban Rondon Corniel</span>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+! =====================================================================
+! CONFIGURACIÓN CISCO IOS - ROUTER ISP
+! Segundo Parcial - Seguridad de Redes (TSI-203)
+! Estudiante: Alan Daniel Garcia Mendez (2025-1403)
+! =====================================================================
+
+hostname ISP
+
+! 1. Seguridad Básica de Red y MOTD
+enable secret EnableSecretPass1403
+no ip domain-lookup
+
+banner motd #
++-----------------------------------------------------------------+
+|               ROUTER DE CORE DEL PROVEEDOR (ISP)                |
+|   Solo personal autorizado. Todo acceso es registrado y auditado.|
+|   Estudiante: Alan Daniel Garcia Mendez (Matrícula: 2025-1403)  |
++-----------------------------------------------------------------+
+#
+
+! Apagar interfaces no utilizadas
+interface FastEthernet0/0
+ shutdown
+exit
+interface FastEthernet0/1
+ shutdown
+exit
+
+! 2. Direccionamiento IP Público
+interface Ethernet0/0
+ description ENLACE_OESTE
+ ip address 1.1.1.1 255.255.255.252
+ no ip redirects
+ no ip proxy-arp
+ no ip directed-broadcast
+ no shutdown
+exit
+
+interface Ethernet0/1
+ description ENLACE_ESTE
+ ip address 2.2.2.1 255.255.255.252
+ no ip redirects
+ no ip proxy-arp
+ no ip directed-broadcast
+ no shutdown
+exit
+
+! NOTA: El ISP no tiene ningún protocolo de enrutamiento dinámico configurado,
+! solo tiene enrutamiento implícito para sus subredes directamente conectadas.
