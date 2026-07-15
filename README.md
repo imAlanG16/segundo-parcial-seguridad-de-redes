@@ -13,10 +13,9 @@
 <strong>Docente:</strong> Jonathan Esteban Rondon Corniel<br>
 <strong>Fecha de Entrega:</strong> 15 de julio de 2026<br>
 <strong>Enlace Video:</strong> <a href="https://youtu.be/tIp-_Fub9n0">https://youtu.be/tIp-_Fub9n0</a><br>
+<strong>Enlace Repositorio:</strong> <a href="https://github.com/imAlanG16/segundo-parcial-seguridad-de-redes">https://github.com/imAlanG16/segundo-parcial-seguridad-de-redes</a><br>
 </div>
 </div>
-
-<div style="page-break-after: always; break-after: page; display: block; height: 1px; overflow: hidden;"></div>
 
 <div class="article-block">
 
@@ -166,5 +165,4 @@ Para documentar el correcto funcionamiento de los entregables y asegurar una cal
 <p><em>Figura 8: Prueba de inicio de sesión SSH con USR15 y validación de privilegio de nivel 15.</em></p>
     *   Iniciar sesión con el usuario de nivel 10 para comprobar que se asigna el nivel 10.
     *   Iniciar sesión con el usuario de nivel 1 para verificar que el nivel de acceso se restringe al mínimo.
-
 </div>

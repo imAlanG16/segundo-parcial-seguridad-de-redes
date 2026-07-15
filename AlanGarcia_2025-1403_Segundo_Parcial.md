@@ -43,6 +43,7 @@ img, table, pre, p, li, tr, blockquote, figure, div[style*="text-align: center"]
 <strong>Docente:</strong> Jonathan Esteban Rondon Corniel<br>
 <strong>Fecha de Entrega:</strong> 15 de julio de 2026<br>
 <strong>Enlace Video:</strong> <a href="https://youtu.be/tIp-_Fub9n0">https://youtu.be/tIp-_Fub9n0</a><br>
+<strong>Enlace Repositorio:</strong> <a href="https://github.com/imAlanG16/segundo-parcial-seguridad-de-redes">https://github.com/imAlanG16/segundo-parcial-seguridad-de-redes</a><br>
 </div>
 </div>
 
