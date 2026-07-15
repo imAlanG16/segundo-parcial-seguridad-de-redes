@@ -16,6 +16,8 @@
 </div>
 </div>
 
+<div style="page-break-after: always; break-after: page; display: block; height: 1px; overflow: hidden;"></div>
+
 <div class="article-block">
 
 ## 1. Introducción y Objetivos
@@ -76,10 +78,8 @@ Se crea el dominio local `alan.local` (NetBIOS: `ALAN`). A nivel de organizació
 
 Dentro de estos grupos se crean y asocian las cuentas de usuario respectivas (`User15 USR15`, `User10 USR10`, `User1 USR1`) para realizar las pruebas de autenticación.
 
-<br>
-<div style="text-align: center;">
-    <img src="images/06_active_directory_groups.png" width="480" alt="Active Directory Groups">
-    <p><em>Figura 2: Consola de Active Directory mostrando los grupos de seguridad y los usuarios creados para las directivas NPS.</em></p>
+<img src="images/06_active_directory_groups.png" width="480" alt="Active Directory Groups">
+<p><em>Figura 2: Consola de Active Directory mostrando los grupos de seguridad y los usuarios creados para las directivas NPS.</em></p>
 
 ### 3.2 Internet Information Services (IIS)
 Se despliega el servidor web IIS en Windows Server. La intranet corporativa de V&L Consultores Legales se aloja en el directorio predeterminado `C:\inetpub\wwwroot\index.html` utilizando el portal HTML premium diseñado. El archivo correspondiente está almacenado en el repositorio bajo: [index.html](resources/index.html).
@@ -91,16 +91,14 @@ Se despliega el servidor web IIS en Windows Server. La intranet corporativa de V
 El servicio NPS gestiona las solicitudes de acceso SSH provenientes de los routers. El flujo de configuración requiere:
 
 1. **Clientes RADIUS:** Se registran los routers `R-Oeste` (identificado en la red interna con su IP origen de túnel `10.0.0.1`) y `R-Este` (`14.3.20.1`) como clientes RADIUS de confianza. Se establece la clave secreta compartida: `20251403`.
-    <img src="images/08_nps_radius_clients.png" width="480" alt="RADIUS Clients en NPS">
+<img src="images/08_nps_radius_clients.png" width="480" alt="RADIUS Clients en NPS">
 <p><em>Figura 4: Clientes RADIUS registrados en el NPS para R-Oeste (10.0.0.1) y R-Este (14.3.20.1).</em></p>
 2. **Políticas de Red (Network Policies):** Se configuran tres políticas de acceso independientes con el siguiente orden de evaluación y condiciones:
    * **Cisco SSH Level 1 (Prioridad 1):** Evalúa la membresía en el grupo `ALAN\NPS1`. En los atributos de respuesta del RADIUS (pestaña Settings -> Vendor Specific Attributes) se inyecta el Vendor Code `9` (Cisco) con el VSA **`shell:priv-lvl=1`**.
    * **Cisco SSH Level 10 (Prioridad 2):** Evalúa la membresía en el grupo `ALAN\NPS10`. Inyecta el atributo Cisco-AV-Pair **`shell:priv-lvl=10`**.
    * **Cisco SSH Level 15 (Prioridad 3):** Evalúa la membresía en el grupo `ALAN\NPS15`. Inyecta el atributo Cisco-AV-Pair **`shell:priv-lvl=15`**.
-    <img src="images/07_nps_network_policies.png" width="480" alt="Network Policies en NPS">
+<img src="images/07_nps_network_policies.png" width="480" alt="Network Policies en NPS">
 <p><em>Figura 5: Directivas de red (Network Policies) estructuradas en el NPS según el nivel de privilegio.</em></p>
-
-</div>
 
 </div>
 
@@ -157,18 +155,16 @@ Para documentar el correcto funcionamiento de los entregables y asegurar una cal
 
 1.  **Running Config de los Routers:** Ejecutar en el modo privilegiado de `R-Oeste` y `R-Este` el comando `show running-config` para demostrar la correcta sintaxis de interfaces, AAA, NAT y criptografía.
 2.  **Rastreo de Ruta (Tracert):** Ejecutar desde el CMD de la máquina Windows Client el comando `tracert 14.3.20.2`. La salida de consola debe validar que el paquete viaja a través del gateway local `14.3.10.1`, pasa por la IP del túnel GRE remoto `10.0.0.2` en el segundo salto, y finalmente alcanza el servidor, demostrando que el tráfico LAN a LAN transita de forma exclusiva y encriptada por la VPN.
-    <br>
-    <div style="text-align: center;">
-        <img src="images/03_tracert_vpn.png" width="450" alt="Tracert VPN">
-        <p><em>Figura 7: Ejecución de tracert verificando que el tráfico LAN a LAN pasa a través del túnel VPN (10.0.0.2).</em></p>
+<img src="images/03_tracert_vpn.png" width="450" alt="Tracert VPN">
+<p><em>Figura 7: Ejecución de tracert verificando que el tráfico LAN a LAN pasa a través del túnel VPN (10.0.0.2).</em></p>
 3.  **Acceso Web a la Intranet IIS:** Abrir el navegador web (Edge/Firefox) en el Windows Client y acceder a la dirección `http://14.3.20.2`. Se debe cargar el portal corporativo de intranet mostrando el título "Segundo Parcial Alan" y tu matrícula.
 4.  **Verificación de Direccionamiento en Windows Client:** Ejecutar `ipconfig /all` en el Windows Client para validar que obtiene direccionamiento dinámico dentro del segmento de matrícula asignado por el servidor DHCP de R-Oeste.
 5.  **Verificación de Funcionamiento de la ACL:** Realizar una prueba de conectividad desde el cliente usando ping (`ping 14.3.20.2`) y verificar que responde correctamente. Posteriormente, intentar establecer una conexión remota RDP (`mstsc`) o transferencia de archivos hacia el servidor para evidenciar que el tráfico es bloqueado por la ACL en el router.
 6.  **Autenticación en Equipos con 3 Usuarios de AD:** Iniciar sesión por SSH desde un cliente hacia los routers utilizando las credenciales de AD configuradas:
     *   Iniciar sesión con el usuario de nivel 15 (`USR15`) y ejecutar `show privilege` para demostrar que se entra directamente en modo de configuración de nivel 15.
-        <img src="images/04_ssh_radius_autenticacion.png" width="450" alt="Autenticacion SSH RADIUS">
+<img src="images/04_ssh_radius_autenticacion.png" width="450" alt="Autenticacion SSH RADIUS">
 <p><em>Figura 8: Prueba de inicio de sesión SSH con USR15 y validación de privilegio de nivel 15.</em></p>
     *   Iniciar sesión con el usuario de nivel 10 para comprobar que se asigna el nivel 10.
     *   Iniciar sesión con el usuario de nivel 1 para verificar que el nivel de acceso se restringe al mínimo.
-</div>
+
 </div>
